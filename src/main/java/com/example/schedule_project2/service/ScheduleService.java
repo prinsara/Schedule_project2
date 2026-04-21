@@ -1,7 +1,48 @@
 package com.example.schedule_project2.service;
 
+import com.example.schedule_project2.dto.CreateScheduleRequest;
+import com.example.schedule_project2.dto.CreateScheduleResponse;
+import com.example.schedule_project2.entity.Schedule;
+import com.example.schedule_project2.repository.ScheduleRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class ScheduleService {
+
+    //Repository 필드 만들어주기
+    private final ScheduleRepository scheduleRepository;
+
+    //저장
+    //요청 DTO 받아오기
+    @Transactional
+    public CreateScheduleResponse createSchedule(CreateScheduleRequest request) {
+
+        //요청 DTO를 DB에 저장하기 위해 Entity로 바꿔주기
+        Schedule schedule = new Schedule(
+                request.getName(),
+                request.getTitle(),
+                request.getContent()
+        );
+
+        //해당 객체를 Repository에 담아주기
+        Schedule addSchedule = scheduleRepository.save(schedule);
+
+        //응답 Dto로 변환
+        CreateScheduleResponse response = new CreateScheduleResponse(
+                addSchedule.getId(),
+                addSchedule.getName(),
+                addSchedule.getTitle(),
+                addSchedule.getContent(),
+                addSchedule.getCreatedAt(),
+                addSchedule.getModifiedAt()
+        );
+
+        //반환해주기
+        return response;
+
+
+    }
 }

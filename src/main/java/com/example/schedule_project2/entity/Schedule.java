@@ -16,10 +16,12 @@ public class Schedule extends BaseEntity {
     private Long id;
 
     private String name;
+    private String title;
     private String content;
 
-    public Schedule(String name, String content) {
+    public Schedule(String name, String title, String content) {
         this.name = name;
+        this.title = title;
         this.content = content;
     }
 }
