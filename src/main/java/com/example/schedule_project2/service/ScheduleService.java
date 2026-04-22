@@ -2,11 +2,15 @@ package com.example.schedule_project2.service;
 
 import com.example.schedule_project2.dto.CreateScheduleRequest;
 import com.example.schedule_project2.dto.CreateScheduleResponse;
+import com.example.schedule_project2.dto.GetScheduleResponse;
 import com.example.schedule_project2.entity.Schedule;
 import com.example.schedule_project2.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +46,36 @@ public class ScheduleService {
 
         //반환해주기
         return response;
+        }
 
+    //전체(다건)조회
+    //조회만 하기
+    @Transactional(readOnly = true)
+    public List<GetScheduleResponse> getSchedule() {
+
+        //1. DB에서 데이터 꺼내오기
+        List<Schedule> schedules = scheduleRepository.findAll(); // 엔티티를 다 찾아옴
+
+        //리스트로 반환해줘야 하기 때문에 빈 리스트 생성
+        List<GetScheduleResponse> dtos = new ArrayList<>();
+
+        //일정 리스트에 하나씩 접근하기
+        for(Schedule schedule : schedules) {
+            //응답 DTO로 변환하기
+            GetScheduleResponse response = new GetScheduleResponse(
+                    schedule.getId(),
+                    schedule.getName(),
+                    schedule.getTitle(),
+                    schedule.getContent(),
+                    schedule.getCreatedAt(),
+                    schedule.getModifiedAt()
+            );
+
+            //빈 리스트에 응답 DTO 담아주기
+            dtos.add(response);
+        }
+
+        return dtos;
 
     }
 }
