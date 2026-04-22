@@ -26,7 +26,15 @@ public class ScheduleController {
 
     //전체 조회
     @GetMapping
-    public ResponseEntity<List<GetScheduleResponse>> getSchedule() {
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getSchedule());
+    public ResponseEntity<List<GetScheduleResponse>> getAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getAll());
     }
+
+    //단건 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<GetScheduleResponse> getOne(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getOne(id));
+    }
+
+
 }

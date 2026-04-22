@@ -51,7 +51,7 @@ public class ScheduleService {
     //전체(다건)조회
     //조회만 하기
     @Transactional(readOnly = true)
-    public List<GetScheduleResponse> getSchedule() {
+    public List<GetScheduleResponse> getAll() {
 
         //1. DB에서 데이터 꺼내오기
         List<Schedule> schedules = scheduleRepository.findAll(); // 엔티티를 다 찾아옴
@@ -77,7 +77,7 @@ public class ScheduleService {
         //2. 배열을 스트림 타입으로 바꿔준다. map, toList를 쓰기위해서
         return schedules.stream().
                 //3. map : 배열 안에 있는 모든 값들 하나하나에 접근해서 지정한 방식으로 변환해주는 것
-                map(schedule -> new GetScheduleResponse(
+                        map(schedule -> new GetScheduleResponse(
                         //4. 스케줄 -> 응답 DTO로 변환
                         schedule.getId(),
                         schedule.getName(),
@@ -86,7 +86,32 @@ public class ScheduleService {
                         schedule.getCreatedAt(),
                         schedule.getModifiedAt())).
                 //5. 리스트로 만들기
-                toList();
+                        toList();
+    }
 
+    //선택조회
+    @Transactional(readOnly = true)
+    public GetScheduleResponse getOne(Long id) {
+        //1. 해당 일정을 찾을 수 없을 때 예외처리(안에 id 찾기 포함)
+        Schedule schedule = findByIdOrThrow(id);
+
+        //2. 찾아온 데이터 응답 DTO 변환
+        GetScheduleResponse response = new GetScheduleResponse(
+                schedule.getId(),
+                schedule.getName(),
+                schedule.getTitle(),
+                schedule.getContent(),
+                schedule.getCreatedAt(),
+                schedule.getModifiedAt()
+        );
+
+        //반환
+        return response;
+
+    }
+
+    public Schedule findByIdOrThrow(Long id) {
+        return scheduleRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 일정을 찾을 수 없습니다."));
     }
 }
