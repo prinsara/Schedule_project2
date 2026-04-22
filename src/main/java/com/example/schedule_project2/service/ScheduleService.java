@@ -46,7 +46,7 @@ public class ScheduleService {
 
         //반환해주기
         return response;
-        }
+    }
 
     //전체(다건)조회
     //조회만 하기
@@ -57,25 +57,36 @@ public class ScheduleService {
         List<Schedule> schedules = scheduleRepository.findAll(); // 엔티티를 다 찾아옴
 
         //리스트로 반환해줘야 하기 때문에 빈 리스트 생성
-        List<GetScheduleResponse> dtos = new ArrayList<>();
+//        List<GetScheduleResponse> dtos = new ArrayList<>();
 
-        //일정 리스트에 하나씩 접근하기
-        for(Schedule schedule : schedules) {
-            //응답 DTO로 변환하기
-            GetScheduleResponse response = new GetScheduleResponse(
-                    schedule.getId(),
-                    schedule.getName(),
-                    schedule.getTitle(),
-                    schedule.getContent(),
-                    schedule.getCreatedAt(),
-                    schedule.getModifiedAt()
-            );
-
-            //빈 리스트에 응답 DTO 담아주기
-            dtos.add(response);
-        }
-
-        return dtos;
+//        //일정 리스트에 하나씩 접근하기
+//        for(Schedule schedule : schedules) {
+//            //응답 DTO로 변환하기
+//            GetScheduleResponse response = new GetScheduleResponse(
+//                    schedule.getId(),
+//                    schedule.getName(),
+//                    schedule.getTitle(),
+//                    schedule.getContent(),
+//                    schedule.getCreatedAt(),
+//                    schedule.getModifiedAt()
+//            );
+//
+//            //빈 리스트에 응답 DTO 담아주기
+//            dtos.add(response);
+//        }
+        //2. 배열을 스트림 타입으로 바꿔준다. map, toList를 쓰기위해서
+        return schedules.stream().
+                //3. map : 배열 안에 있는 모든 값들 하나하나에 접근해서 지정한 방식으로 변환해주는 것
+                map(schedule -> new GetScheduleResponse(
+                        //4. 스케줄 -> 응답 DTO로 변환
+                        schedule.getId(),
+                        schedule.getName(),
+                        schedule.getTitle(),
+                        schedule.getContent(),
+                        schedule.getCreatedAt(),
+                        schedule.getModifiedAt())).
+                //5. 리스트로 만들기
+                toList();
 
     }
 }
