@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -139,8 +138,19 @@ public class ScheduleService {
         return response;
     }
 
+    //일정 삭제
+    @Transactional
+    public void delete(Long id) {
+        //1. 일정 찾기
+        Schedule schedule = findByIdOrThrow(id);
+
+        //2. 레포지토리 안에서 찾은 일정 삭제하기
+        scheduleRepository.deleteById(id);
+    }
 
 
+
+    //ID 찾기, 예외처리 메서드
     public Schedule findByIdOrThrow(Long id) {
         return scheduleRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 일정을 찾을 수 없습니다."));
