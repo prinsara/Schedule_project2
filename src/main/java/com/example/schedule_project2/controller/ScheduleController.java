@@ -1,8 +1,6 @@
 package com.example.schedule_project2.controller;
 
-import com.example.schedule_project2.dto.CreateScheduleRequest;
-import com.example.schedule_project2.dto.CreateScheduleResponse;
-import com.example.schedule_project2.dto.GetScheduleResponse;
+import com.example.schedule_project2.dto.*;
 import com.example.schedule_project2.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,5 +34,10 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getOne(id));
     }
 
+    //일정 수정
+    @PutMapping("/{id}")
+    public ResponseEntity<UpdateScheduleResponse> updateSchedule(@PathVariable Long id, @RequestBody UpdateScheduleRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.update(id, request));
+    }
 
 }

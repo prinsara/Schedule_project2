@@ -1,8 +1,6 @@
 package com.example.schedule_project2.service;
 
-import com.example.schedule_project2.dto.CreateScheduleRequest;
-import com.example.schedule_project2.dto.CreateScheduleResponse;
-import com.example.schedule_project2.dto.GetScheduleResponse;
+import com.example.schedule_project2.dto.*;
 import com.example.schedule_project2.entity.Schedule;
 import com.example.schedule_project2.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -109,6 +107,39 @@ public class ScheduleService {
         return response;
 
     }
+
+    //수정
+    @Transactional
+    public UpdateScheduleResponse update(Long id, UpdateScheduleRequest request) {
+        //1. 아이디 찾기 + 예외 처리
+        Schedule schedule = findByIdOrThrow(id);
+
+        //2. 찾은 아이디를 통해 새 값으로 변경해줘야한다.
+        //2-1. 요청 받아오기
+        schedule.updateSchedule(
+                request.getName(),
+                request.getTitle(),
+                request.getContent()
+        );
+
+        //3. 레포지토리에 저장하기
+        //영속성 컨텍스트로 인해 저장은 필요없다.
+//        Schedule updateSchedule = scheduleRepository.save(schedule);
+
+        //4. 응답 DTO로 변환해주기
+        UpdateScheduleResponse response = new UpdateScheduleResponse(
+                schedule.getId(),
+                schedule.getName(),
+                schedule.getTitle(),
+                schedule.getContent(),
+                schedule.getCreatedAt(),
+                schedule.getModifiedAt()
+        );
+        //5. 반환하기
+        return response;
+    }
+
+
 
     public Schedule findByIdOrThrow(Long id) {
         return scheduleRepository.findById(id).orElseThrow(
